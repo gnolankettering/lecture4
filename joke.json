@@ -1,0 +1,64 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "JokeAPI",
+    "description": "An API to fetch jokes from different categories with various filters.",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://v2.jokeapi.dev",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/joke/{category}": {
+      "get": {
+        "operationId": "getJokeByCategory",
+        "summary": "Fetches a joke from a specific category.",
+        "description": "Retrieves a random joke from the specified category.",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "description": "Category of joke to fetch",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON object containing the joke",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "joke": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (e.g., invalid category)"
+          }
+        }
+      }
+    }
+  }
+}
