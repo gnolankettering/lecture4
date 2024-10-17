@@ -1,0 +1,103 @@
+openapi: 3.1.0
+info:
+  title: Weather API
+  description: API for accessing weather forecast data
+  version: 1.0.0
+servers:
+  - url: https://api.weather.gov
+paths:
+  /points/{latitude},{longitude}:
+    get:
+      operationId: getGridFromLatLong
+      summary: Get weather grid information based on latitude and longitude
+      description: Returns weather grid data for a specific latitude and longitude.
+      parameters:
+        - name: latitude
+          in: path
+          required: true
+          schema:
+            type: number
+            format: float
+          example: 39.7456
+        - name: longitude
+          in: path
+          required: true
+          schema:
+            type: number
+            format: float
+          example: -97.0892
+      responses:
+        '200':
+          description: Successful response with weather grid information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gridId:
+                    type: string
+                    description: Grid identifier
+                  gridX:
+                    type: integer
+                    description: X coordinate in the grid
+                  gridY:
+                    type: integer
+                    description: Y coordinate in the grid
+                  forecastOffice:
+                    type: string
+                    description: Forecast office identifier
+        '400':
+          description: Invalid latitude or longitude provided.
+        '500':
+          description: Internal server error.
+
+  /gridpoints/{office}/{gridX},{gridY}/forecast:
+    get:
+      operationId: getForecastByGrid
+      summary: Get forecast for a specific grid point
+      description: Returns forecast data for a specific grid point based on office, gridX, and gridY.
+      parameters:
+        - name: office
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "BOU"
+        - name: gridX
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 65
+        - name: gridY
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 76
+      responses:
+        '200':
+          description: Successful response with weather forecast.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  forecast:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        temperature:
+                          type: integer
+                          description: Temperature forecast
+                        windSpeed:
+                          type: string
+                          description: Wind speed forecast
+                        shortForecast:
+                          type: string
+                          description: Short summary of the forecast
+        '400':
+          description: Invalid grid parameters.
+        '500':
+          description: Internal server error.
